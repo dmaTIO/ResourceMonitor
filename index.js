@@ -39,37 +39,36 @@ const ipc = require("electron").ipcRenderer;
 // });
 
 ipc.on("cpu", (event, data) => {
-  document.getElementById("cpu").innerHTML = data.toFixed(2);
+	document.getElementById("cpu").innerHTML = data.toFixed(2);
 });
 ipc.on("mem", (event, data) => {
-  document.getElementById("mem").innerHTML = data.toFixed(2);
+	document.getElementById("mem").innerHTML = data.toFixed(2);
 });
 ipc.on("total-mem", (event, data) => {
-  document.getElementById("total-mem").innerHTML = data.toFixed(2);
+	document.getElementById("total-mem").innerHTML = data.toFixed(2);
 });
 
-// const features = document.getElementById("features");
-// features.addEventListener("click", function () {
-//   ipc.once("actionReply", function (event, response) {
-//     console.dir(response);
-//   });
-//   ipc.send("invokeAction", "someData");
-// });
+const features = document.getElementById("features");
+features.addEventListener("click", function () {
+	ipc.once("actionReply", function (event, response) {
+		console.dir(response);
+	});
+	ipc.send("invokeAction", "someData");
+});
 
-TweenMax.set(
-  "#ring1, #ring2,\
+TweenMax.set("#ring1, #ring2,\
     #ring2 .c4, #ring2 .c5, #ring2 .c6, #ring2 .c7,\
     #ring2-1, #ring3,\
     #ring3-1, #ring3 .c4,\
     #ring4, #ring4 .c1, #ring4 .c2,\
-    #ring4 .c3, #ring4 .c4",
-  { transformOrigin: "50% 50%" }
-);
+    #ring4 .c3, #ring4 .c4", {
+	transformOrigin: "50% 50%",
+});
 
 function pad(num, size) {
-  var s = num + "";
-  while (s.length < size) s = "0" + s;
-  return s;
+	var s = num + "";
+	while (s.length < size) s = "0" + s;
+	return s;
 }
 
 TweenMax.set("#ring1 .c1", { drawSVG: "0% 25%" });
@@ -91,65 +90,65 @@ TweenMax.set("#ring4 .c3", { drawSVG: "60%", rotation: 180 });
 var u = 0.75;
 
 TweenMax.to("#ring1", 60 * u, {
-  rotation: -360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: -360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring2-1", 120 * u, {
-  rotation: 360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring2 .c4", 10 * u, {
-  rotation: 360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring2 .c5", 10 * u, {
-  rotation: 360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring2 .c6", 10 * u, {
-  rotation: 360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring2 .c7", 10 * u, {
-  rotation: 360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring3-1", 30 * u, {
-  rotation: 360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring3 .c4", 10 * u, {
-  rotation: -360,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: -360,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring4 .c1", 5 * u, {
-  rotation: 360 + 120,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360 + 120,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring4 .c2", 10 * u, {
-  rotation: -360 + 40,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: -360 + 40,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring4 .c3", 2 * u, {
-  rotation: 360 + 180,
-  repeat: -1,
-  ease: Linear.easeNone,
+	rotation: 360 + 180,
+	repeat: -1,
+	ease: Linear.easeNone,
 });
 TweenMax.to("#ring4 .c4", 2 * u, {
-  scale: 1.15,
-  yoyo: true,
-  repeat: -1,
-  ease: Power2.easeInOut,
+	scale: 1.15,
+	yoyo: true,
+	repeat: -1,
+	ease: Power2.easeInOut,
 });
 
 var timeout;
@@ -157,35 +156,35 @@ document.body.addEventListener("mousemove", move);
 document.body.addEventListener("touchmove", move);
 
 function move(e) {
-  e.preventDefault();
-  clearTimeout(timeout);
-  TweenMax.to("#move-text", 1, { opacity: 0 });
-  var px = e.clientX;
-  var py = e.clientY;
-  if (e.touches) {
-    px = e.touches[0].clientX;
-    py = e.touches[0].clientY;
-  }
-  var w = window.innerWidth / 2;
-  var h = window.innerHeight / 2;
-  var nx = (px - w) / w;
-  var ny = (py - h) / h;
+	e.preventDefault();
+	clearTimeout(timeout);
+	TweenMax.to("#move-text", 1, { opacity: 0 });
+	var px = e.clientX;
+	var py = e.clientY;
+	if (e.touches) {
+		px = e.touches[0].clientX;
+		py = e.touches[0].clientY;
+	}
+	var w = window.innerWidth / 2;
+	var h = window.innerHeight / 2;
+	var nx = (px - w) / w;
+	var ny = (py - h) / h;
 
-  var tx = nx * 150;
-  var ty = ny * 60;
+	var tx = nx * 150;
+	var ty = ny * 60;
 
-  animCircles(tx, ty);
-  timeout = setTimeout(function () {
-    animCircles(0, 0);
-  }, 2000);
+	animCircles(tx, ty);
+	timeout = setTimeout(function () {
+		animCircles(0, 0);
+	}, 2000);
 }
 
 function animCircles(tx, ty) {
-  var tl = new TimelineMax();
-  var rf = [1, 0.5, 0.25, 0.125];
-  for (var i = 1; i < 5; i++) {
-    tl.to("#ring" + i, 2.5, { x: tx * rf[i], y: ty * rf[i - 1] }, "a");
-  }
+	var tl = new TimelineMax();
+	var rf = [1, 0.5, 0.25, 0.125];
+	for (var i = 1; i < 5; i++) {
+		tl.to("#ring" + i, 2.5, { x: tx * rf[i], y: ty * rf[i - 1] }, "a");
+	}
 }
 
 var diskTotal = 423;
@@ -195,28 +194,28 @@ var bandwidthMax = 32;
 var timeMax = 2400;
 
 function updateData() {
-  var time = new Date();
-  var timeValue = pad(time.getHours(), 0) + ":" + time.getMinutes();
-  var tp = (timeValue / timeMax) * 100;
-  document.getElementById("time-text").textContent = timeValue;
-  TweenMax.to("#ring2 .c4", 0.5, { drawSVG: "0% " + tp + "%" });
+	var time = new Date();
+	var timeValue = pad(time.getHours(), 0) + ":" + time.getMinutes();
+	var tp = (timeValue / timeMax) * 100;
+	document.getElementById("time-text").textContent = timeValue;
+	TweenMax.to("#ring2 .c4", 0.5, { drawSVG: "0% " + tp + "%" });
 
-  var energy = Math.floor(Math.random() * 30 + 10);
-  var ep = (energy / energyMax) * 100;
-  // document.getElementById("energy-text").textContent = energy + "W";
-  TweenMax.to("#ring2 .c5", 0.5, { drawSVG: "0% " + ep + "%" });
+	var energy = Math.floor(Math.random() * 30 + 10);
+	var ep = (energy / energyMax) * 100;
+	// document.getElementById("energy-text").textContent = energy + "W";
+	TweenMax.to("#ring2 .c5", 0.5, { drawSVG: "0% " + ep + "%" });
 
-  var bandwidth = Math.floor(Math.random() * 20 + 5);
-  var dp = (bandwidth / bandwidthMax) * 100;
-  // document.getElementById("bandwidth-text").textContent = bandwidth + "Mbps";
-  TweenMax.to("#ring2 .c6", 0.5, { drawSVG: "0% " + dp + "%" });
+	var bandwidth = Math.floor(Math.random() * 20 + 5);
+	var dp = (bandwidth / bandwidthMax) * 100;
+	// document.getElementById("bandwidth-text").textContent = bandwidth + "Mbps";
+	TweenMax.to("#ring2 .c6", 0.5, { drawSVG: "0% " + dp + "%" });
 
-  diskTotal = Math.floor(diskTotal * 10 + 1) / 10;
-  diskTotal = diskTotal > diskMax ? 423 : diskTotal;
-  var dip = (diskTotal / diskMax) * 100;
-  // document.getElementById("disk-text").textContent = diskTotal + "GB";
-  TweenMax.to("#ring2 .c7", 0.5, { drawSVG: "0% " + dip + "%" });
+	diskTotal = Math.floor(diskTotal * 10 + 1) / 10;
+	diskTotal = diskTotal > diskMax ? 423 : diskTotal;
+	var dip = (diskTotal / diskMax) * 100;
+	// document.getElementById("disk-text").textContent = diskTotal + "GB";
+	TweenMax.to("#ring2 .c7", 0.5, { drawSVG: "0% " + dip + "%" });
 
-  setTimeout(updateData, 2000);
+	setTimeout(updateData, 2000);
 }
 updateData();
