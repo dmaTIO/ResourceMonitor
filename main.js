@@ -11,10 +11,11 @@ let popWindow = true;
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 600,
     height: 600,
     resizable: false,
     alwaysOnTop: true,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       nativeWindowOpen: true,
