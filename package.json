@@ -1,0 +1,42 @@
+{
+  "name": "fuxmonitor",
+  "productName": "Fux Monitor",
+  "version": "1.0.0",
+  "description": "Resource Monitor",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build-installer": "electron-builder -mwl"
+  },
+  "keywords": [
+    "electron"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^14.0.0",
+    "electron-builder": "^22.11.7"
+  },
+  "dependencies": {
+    "os-utils": "^0.0.14"
+  },
+  "build": {
+    "appId": "cool-app",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "installerIcon": "",
+      "uninstallerIcon": "",
+      "uninstallDisplayName": "FuxMonitor",
+      "license": "license.txt",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
