@@ -1,221 +1,94 @@
 const ipc = require("electron").ipcRenderer;
 
-// //const electron = require("electron");
-// // Importing the app module using Electron remote
-// //const app = electron.remote.app;
+const formatTime = (s) => {
+	var date = new Date(s);
+	// Hours part from the timestamp
+	var hours = date.getHours();
+	// Minutes part from the timestamp
+	var minutes = "0" + date.getMinutes();
+	// Seconds part from the timestamp
+	var seconds = "0" + date.getSeconds();
 
-// app.on("gpu-info-update", () => {
-//   console.log("GPU Information has been Updated");
-// });
+	// Will display time in 10:30:23 format
+	return hours + ":" + minutes.substr(-2);
+};
 
-// app.on("gpu-process-crashed", (event, killed) => {
-//   console.log("GPU Process has crashed");
-//   console.log(event);
-//   console.log("Whether GPU Process was killed - ", killed);
-// });
-
-// var metrics = document.getElementById("metrics");
-// metrics.addEventListener("click", () => {
-//   console.dir(app.getAppMetrics());
-// });
-
-// var basic = document.getElementById("basic");
-// basic.addEventListener("click", () => {
-//   app.getGPUInfo("basic").then((basicObj) => {
-//     console.dir(basicObj);
-//   });
-// });
-
-// var complete = document.getElementById("complete");
-// complete.addEventListener("click", () => {
-//   app.getGPUInfo("complete").then((completeObj) => {
-//     console.dir(completeObj);
-//   });
-// });
-
-// var features = document.getElementById("features");
-// features.addEventListener("click", () => {
-//   console.dir(app.getGPUFeatureStatus());
-// });
-
-ipc.on("cpu", (event, data) => {
-	document.getElementById("cpu").innerHTML = data.toFixed(2);
+ipc.on("systemInfoOS", (event, data) => {
+	window.localStorage.setItem("systemInfoOS", data);
+	const osInfo = JSON.parse(data);
+	document.getElementById("pcName").innerHTML = osInfo.hostname + " - " + osInfo.distro;
 });
+
 ipc.on("mem", (event, data) => {
-	document.getElementById("mem").innerHTML = data.toFixed(2);
-});
-ipc.on("total-mem", (event, data) => {
-	document.getElementById("total-mem").innerHTML = data.toFixed(2);
+	window.localStorage.setItem("mem", data);
+	const memInfo = JSON.parse(data);
+	document.getElementById("ramTotal").innerHTML = (parseFloat(memInfo.total) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
 });
 
-const features = document.getElementById("features");
-features.addEventListener("click", function () {
-	ipc.once("actionReply", function (event, response) {
-		console.dir(response);
+ipc.on("systemTime", (event, data) => {
+	const currentDateTime = data.current;
+	document.getElementById("time").innerHTML = formatTime(currentDateTime);
+});
+
+//Dashboard UI functions
+
+document.addEventListener("DOMContentLoaded", function () {
+	// Set System OS Info
+
+	//Get Name
+	const osInfoStored = JSON.parse(window.localStorage.getItem("systemInfoOS"));
+	document.getElementById("pcName").innerHTML = osInfoStored.hostname + " - " + osInfoStored.distro;
+
+	//Get Ram Total
+	const memInfo = JSON.parse(window.localStorage.getItem("mem"));
+	document.getElementById("ramTotal").innerHTML = (parseFloat(memInfo.total) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
+
+	//Get Dark Mode
+	let isDarkMode = window.localStorage.getItem("darkMode") === "true";
+	var modeSwitch = document.querySelector(".mode-switch");
+
+	if (isDarkMode) {
+		document.documentElement.classList.add("dark");
+		modeSwitch.classList.add("active");
+	} else {
+		document.documentElement.classList.remove("dark");
+		modeSwitch.classList.remove("active");
+	}
+
+	modeSwitch.addEventListener("click", function () {
+		document.documentElement.classList.toggle("dark");
+		modeSwitch.classList.toggle("active");
+		console.log();
+		if (modeSwitch.classList[1]) {
+			window.localStorage.setItem("darkMode", "true");
+		} else {
+			window.localStorage.setItem("darkMode", "false");
+		}
 	});
-	ipc.send("invokeAction", "someData");
+
+	var listView = document.querySelector(".list-view");
+	var gridView = document.querySelector(".grid-view");
+	var projectsList = document.querySelector(".project-boxes");
+
+	listView.addEventListener("click", function () {
+		gridView.classList.remove("active");
+		listView.classList.add("active");
+		projectsList.classList.remove("jsGridView");
+		projectsList.classList.add("jsListView");
+	});
+
+	gridView.addEventListener("click", function () {
+		gridView.classList.add("active");
+		listView.classList.remove("active");
+		projectsList.classList.remove("jsListView");
+		projectsList.classList.add("jsGridView");
+	});
+
+	document.querySelector(".messages-btn").addEventListener("click", function () {
+		document.querySelector(".messages-section").classList.add("show");
+	});
+
+	document.querySelector(".messages-close").addEventListener("click", function () {
+		document.querySelector(".messages-section").classList.remove("show");
+	});
 });
-
-TweenMax.set("#ring1, #ring2,\
-    #ring2 .c4, #ring2 .c5, #ring2 .c6, #ring2 .c7,\
-    #ring2-1, #ring3,\
-    #ring3-1, #ring3 .c4,\
-    #ring4, #ring4 .c1, #ring4 .c2,\
-    #ring4 .c3, #ring4 .c4", {
-	transformOrigin: "50% 50%",
-});
-
-function pad(num, size) {
-	var s = num + "";
-	while (s.length < size) s = "0" + s;
-	return s;
-}
-
-TweenMax.set("#ring1 .c1", { drawSVG: "0% 25%" });
-TweenMax.set("#ring1 .c2", { drawSVG: "50% 75%" });
-
-TweenMax.set("#ring2 .c4", { drawSVG: "0% 0%" });
-TweenMax.set("#ring2 .c5", { drawSVG: "0% 0%" });
-TweenMax.set("#ring2 .c6", { drawSVG: "0% 0%" });
-TweenMax.set("#ring2 .c7", { drawSVG: "0% 0%" });
-
-TweenMax.set("#ring3 .c1", { drawSVG: "0% 25%" });
-TweenMax.set("#ring3 .c2", { drawSVG: "50% 75%" });
-TweenMax.set("#ring3 .c4", { drawSVG: "60%" });
-
-TweenMax.set("#ring4 .c1", { drawSVG: "60%", rotation: 120 });
-TweenMax.set("#ring4 .c2", { drawSVG: "60%", rotation: 40 });
-TweenMax.set("#ring4 .c3", { drawSVG: "60%", rotation: 180 });
-
-var u = 0.75;
-
-TweenMax.to("#ring1", 60 * u, {
-	rotation: -360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring2-1", 120 * u, {
-	rotation: 360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring2 .c4", 10 * u, {
-	rotation: 360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring2 .c5", 10 * u, {
-	rotation: 360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring2 .c6", 10 * u, {
-	rotation: 360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring2 .c7", 10 * u, {
-	rotation: 360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring3-1", 30 * u, {
-	rotation: 360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring3 .c4", 10 * u, {
-	rotation: -360,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring4 .c1", 5 * u, {
-	rotation: 360 + 120,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring4 .c2", 10 * u, {
-	rotation: -360 + 40,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring4 .c3", 2 * u, {
-	rotation: 360 + 180,
-	repeat: -1,
-	ease: Linear.easeNone,
-});
-TweenMax.to("#ring4 .c4", 2 * u, {
-	scale: 1.15,
-	yoyo: true,
-	repeat: -1,
-	ease: Power2.easeInOut,
-});
-
-var timeout;
-document.body.addEventListener("mousemove", move);
-document.body.addEventListener("touchmove", move);
-
-function move(e) {
-	e.preventDefault();
-	clearTimeout(timeout);
-	TweenMax.to("#move-text", 1, { opacity: 0 });
-	var px = e.clientX;
-	var py = e.clientY;
-	if (e.touches) {
-		px = e.touches[0].clientX;
-		py = e.touches[0].clientY;
-	}
-	var w = window.innerWidth / 2;
-	var h = window.innerHeight / 2;
-	var nx = (px - w) / w;
-	var ny = (py - h) / h;
-
-	var tx = nx * 150;
-	var ty = ny * 60;
-
-	animCircles(tx, ty);
-	timeout = setTimeout(function () {
-		animCircles(0, 0);
-	}, 2000);
-}
-
-function animCircles(tx, ty) {
-	var tl = new TimelineMax();
-	var rf = [1, 0.5, 0.25, 0.125];
-	for (var i = 1; i < 5; i++) {
-		tl.to("#ring" + i, 2.5, { x: tx * rf[i], y: ty * rf[i - 1] }, "a");
-	}
-}
-
-var diskTotal = 423;
-var diskMax = 2048;
-var energyMax = 50;
-var bandwidthMax = 32;
-var timeMax = 2400;
-
-function updateData() {
-	var time = new Date();
-	var timeValue = pad(time.getHours(), 0) + ":" + time.getMinutes();
-	var tp = (timeValue / timeMax) * 100;
-	document.getElementById("time-text").textContent = timeValue;
-	TweenMax.to("#ring2 .c4", 0.5, { drawSVG: "0% " + tp + "%" });
-
-	var energy = Math.floor(Math.random() * 30 + 10);
-	var ep = (energy / energyMax) * 100;
-	// document.getElementById("energy-text").textContent = energy + "W";
-	TweenMax.to("#ring2 .c5", 0.5, { drawSVG: "0% " + ep + "%" });
-
-	var bandwidth = Math.floor(Math.random() * 20 + 5);
-	var dp = (bandwidth / bandwidthMax) * 100;
-	// document.getElementById("bandwidth-text").textContent = bandwidth + "Mbps";
-	TweenMax.to("#ring2 .c6", 0.5, { drawSVG: "0% " + dp + "%" });
-
-	diskTotal = Math.floor(diskTotal * 10 + 1) / 10;
-	diskTotal = diskTotal > diskMax ? 423 : diskTotal;
-	var dip = (diskTotal / diskMax) * 100;
-	// document.getElementById("disk-text").textContent = diskTotal + "GB";
-	TweenMax.to("#ring2 .c7", 0.5, { drawSVG: "0% " + dip + "%" });
-
-	setTimeout(updateData, 2000);
-}
-updateData();

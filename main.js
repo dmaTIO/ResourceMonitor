@@ -1,21 +1,28 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, screen } = require("electron");
+app.disableHardwareAcceleration();
+app.disableDomainBlockingFor3DAPIs();
 const path = require("path");
 const ipc = require("electron").ipcMain;
 const os = require("os-utils");
+const si = require("systeminformation");
+
 // let resourceInterval;
 let popWindow = true;
 
-const createWindow = () => {
+const createWindow = (screenX, screenY) => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
-		width: 600,
-		height: 600,
-		resizable: false,
-		alwaysOnTop: true,
-		frame: false,
+		width: 1200,
+		height: 900,
+		// resizable: false,
+		// alwaysOnTop: true,
+		// frame: false,
+		x: screenX,
+		y: screenY,
+		minWidth: 900,
 		webPreferences: {
 			nodeIntegration: true,
 			nativeWindowOpen: true,
@@ -25,33 +32,48 @@ const createWindow = () => {
 	});
 
 	const resourceInterval = setInterval(() => {
-		if (popWindow) {
-			os.cpuUsage(function (v) {
-				mainWindow.webContents.send("cpu", v * 100);
-				mainWindow.webContents.send("mem", os.freememPercentage() * 100);
-				mainWindow.webContents.send("mem", 100 - os.freememPercentage() * 100);
-				mainWindow.webContents.send("total-mem", os.totalmem() / 1024);
-			});
-		}
+		//Send System Time
+		mainWindow.webContents.send("systemTime", si.time());
 	}, 1000);
 
 	// and load the index.html of the app.
 	mainWindow.loadFile("index.html");
 
-	// mainWindow.webContents.openDevTools();
+	mainWindow.webContents.openDevTools();
 
 	// Open the DevTools.
 	// mainWindow.webContents.openDevTools()
 
 	mainWindow.on("closed", () => {
 		popWindow = null;
-		clearInterval(resourceInterval);
+		// clearInterval(resourceInterval);
 	});
 
 	mainWindow.on("close", () => {
 		popWindow = null;
-		clearInterval(resourceInterval);
+		// clearInterval(resourceInterval);
 	});
+
+	// System Info
+
+	si.osInfo()
+		.then((os) => {
+			// console.log(os);
+			const { distro, hostname, fqdn, platform } = os;
+
+			mainWindow.webContents.send("systemInfoOS", JSON.stringify(os));
+		})
+		.catch((err) => {
+			console.log("os info error", err);
+		});
+
+	si.mem()
+		.then((mem) => {
+			mainWindow.webContents.send("mem", JSON.stringify(mem));
+		})
+		.catch((err) => {
+			console.log("os info error", err);
+		});
 };
 
 ipc.on("invokeAction", function (event, data) {
@@ -67,12 +89,15 @@ ipc.on("invokeAction", function (event, data) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-	createWindow();
-
+	const displays = screen.getAllDisplays();
+	createWindow(displays[1].bounds.x + 50, displays[1].bounds.y + 50);
 	app.on("activate", function () {
 		// On macOS it's common to re-create a window in the app when the
 		// dock icon is clicked and there are no other windows open.
-		if (BrowserWindow.getAllWindows().length === 0) createWindow();
+		if (BrowserWindow.getAllWindows().length === 0) {
+			const displays = screen.getAllDisplays();
+			createWindow(displays[1].bounds.x + 50, displays[1].bounds.y + 50);
+		}
 	});
 });
 

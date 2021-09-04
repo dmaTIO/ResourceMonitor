@@ -7,7 +7,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "electron .",
-		"build-installer": "electron-builder -w"
+		"build-installer": "electron-builder --windows"
 	},
 	"keywords": [
 		"electron"
@@ -19,7 +19,10 @@
 		"electron-builder": "^22.11.7"
 	},
 	"dependencies": {
-		"os-utils": "^0.0.14"
+		"cmake-js": "^6.2.1",
+		"node-addon-api": "^4.1.0",
+		"os-utils": "^0.0.14",
+		"systeminformation": "^5.8.7"
 	},
 	"build": {
 		"appId": "cool-app",
