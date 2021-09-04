@@ -30,6 +30,36 @@ ipc.on("systemTime", (event, data) => {
 	document.getElementById("time").innerHTML = formatTime(currentDateTime);
 });
 
+ipc.on("displays", (event, data) => {
+	const displaysArray = data;
+	window.localStorage.setItem("displaysArray", JSON.stringify(displaysArray));
+});
+
+ipc.on("memoryTotal", (event, data) => {
+	const memoryTotal = data;
+	window.localStorage.setItem("memoryTotal", JSON.stringify(memoryTotal));
+});
+
+ipc.on("gpuName", (event, data) => {
+	const gpuName = data;
+	window.localStorage.setItem("gpuName", JSON.stringify(gpuName));
+});
+
+ipc.on("bus", (event, data) => {
+	const bus = data;
+	window.localStorage.setItem("bus", JSON.stringify(bus));
+});
+
+ipc.on("driverVersion", (event, data) => {
+	const driverVersion = data;
+	window.localStorage.setItem("driverVersion", JSON.stringify(driverVersion));
+});
+
+ipc.on("gpuCount", (event, data) => {
+	const gpuCount = data;
+	window.localStorage.setItem("gpuCount", gpuCount);
+});
+
 //Dashboard UI functions
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -42,6 +72,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	//Get Ram Total
 	const memInfo = JSON.parse(window.localStorage.getItem("mem"));
 	document.getElementById("ramTotal").innerHTML = (parseFloat(memInfo.total) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
+
+	//Get Displays
+	const displaysInfo = JSON.parse(window.localStorage.getItem("displaysArray"));
+	document.getElementById("displaysCount").innerHTML = displaysInfo.length;
+
+	//Get GpuCount
+	const gpuCount = JSON.parse(window.localStorage.getItem("gpuCount"));
+	document.getElementById("gpuCount").innerHTML = gpuCount;
 
 	//Get Dark Mode
 	let isDarkMode = window.localStorage.getItem("darkMode") === "true";

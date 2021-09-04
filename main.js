@@ -41,9 +41,6 @@ const createWindow = (screenX, screenY) => {
 
 	mainWindow.webContents.openDevTools();
 
-	// Open the DevTools.
-	// mainWindow.webContents.openDevTools()
-
 	mainWindow.on("closed", () => {
 		popWindow = null;
 		// clearInterval(resourceInterval);
@@ -55,7 +52,6 @@ const createWindow = (screenX, screenY) => {
 	});
 
 	// System Info
-
 	si.osInfo()
 		.then((os) => {
 			// console.log(os);
@@ -64,15 +60,32 @@ const createWindow = (screenX, screenY) => {
 			mainWindow.webContents.send("systemInfoOS", JSON.stringify(os));
 		})
 		.catch((err) => {
-			console.log("os info error", err);
+			console.log("systemInfoOS info error", err);
 		});
 
+	//Ram Info
 	si.mem()
 		.then((mem) => {
 			mainWindow.webContents.send("mem", JSON.stringify(mem));
 		})
 		.catch((err) => {
-			console.log("os info error", err);
+			console.log("mem info error", err);
+		});
+
+	//Graphics Info
+	si.graphics()
+		.then((graphics) => {
+			// console.log(graphics);
+			const { displays } = graphics;
+			mainWindow.webContents.send("displays", displays);
+			mainWindow.webContents.send("gpuName", graphics.controllers[0].model);
+			mainWindow.webContents.send("memoryTotal", graphics.controllers[0].memoryTotal);
+			mainWindow.webContents.send("bus", graphics.controllers[0].bus);
+			mainWindow.webContents.send("driverVersion", graphics.controllers[0].driverVersion);
+			mainWindow.webContents.send("gpuCount", graphics.controllers.length);
+		})
+		.catch((err) => {
+			console.log("graphics info error", err);
 		});
 };
 
