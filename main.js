@@ -144,13 +144,22 @@ ipc.on("invokeAction", function (event, data) {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
 	const displays = screen.getAllDisplays();
-	createWindow(displays[1].bounds.x + 50, displays[1].bounds.y + 50);
+	if (displays.length > 1) {
+		createWindow(displays[1].bounds.x + 50, displays[1].bounds.y + 50);
+	} else {
+		createWindow();
+	}
+
 	app.on("activate", function () {
 		// On macOS it's common to re-create a window in the app when the
 		// dock icon is clicked and there are no other windows open.
 		if (BrowserWindow.getAllWindows().length === 0) {
 			const displays = screen.getAllDisplays();
-			createWindow(displays[1].bounds.x + 50, displays[1].bounds.y + 50);
+			if (displays.length > 1) {
+				createWindow(displays[1].bounds.x + 50, displays[1].bounds.y + 50);
+			} else {
+				createWindow();
+			}
 		}
 	});
 });
