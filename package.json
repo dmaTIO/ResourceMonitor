@@ -1,9 +1,10 @@
 {
 	"name": "fuxmonitor",
-	"productName": "Fux Monitor",
+	"productName": "FuxMonitor",
 	"version": "1.0.0",
 	"description": "Resource Monitor",
 	"main": "main.js",
+	"icon": "assets/icons/MBAM.icon",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "electron .",
@@ -25,17 +26,17 @@
 		"systeminformation": "^5.8.7"
 	},
 	"build": {
-		"appId": "cool-app",
+		"appId": "FuxMonitor",
 		"win": {
 			"target": [
 				"nsis"
 			],
-			"icon": "",
+			"icon": "assets/Icons/MBAM.ico",
 			"requestedExecutionLevel": "requireAdministrator"
 		},
 		"nsis": {
-			"installerIcon": "",
-			"uninstallerIcon": "",
+			"installerIcon": "assets/Icons/MBAM.ico",
+			"uninstallerIcon": "assets/Icons/MBAM.ico",
 			"uninstallDisplayName": "FuxMonitor",
 			"license": "",
 			"oneClick": false,

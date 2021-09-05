@@ -20,8 +20,9 @@ const createWindow = (screenX, screenY) => {
 		// resizable: false,
 		// alwaysOnTop: true,
 		// frame: false,
-		x: screenX,
-		y: screenY,
+		// x: screenX,
+		// y: screenY,
+		icon: "assets/icons/MBAM.ico",
 		minWidth: 900,
 		webPreferences: {
 			nodeIntegration: true,
@@ -103,6 +104,7 @@ const createWindow = (screenX, screenY) => {
 			mainWindow.webContents.send("GPUmemoryTotal", graphics.controllers[0].memoryTotal);
 			mainWindow.webContents.send("bus", graphics.controllers[0].bus);
 			mainWindow.webContents.send("driverVersion", graphics.controllers[0].driverVersion);
+			mainWindow.webContents.send("gpuCount", graphics.controllers.length);
 		})
 		.catch((err) => {
 			console.log("graphics info error", err);

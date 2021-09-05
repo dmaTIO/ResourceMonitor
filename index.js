@@ -44,6 +44,7 @@ ipc.on("GPUmemoryTotal", (event, data) => {
 ipc.on("gpuName", (event, data) => {
 	const gpuName = data;
 	window.localStorage.setItem("gpuName", JSON.stringify(gpuName));
+	document.getElementById("gpuName").innerHTML = gpuName;
 });
 
 ipc.on("bus", (event, data) => {
