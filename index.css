@@ -394,8 +394,8 @@ a {
 	border-top: 1px solid var(--message-box-border);
 	padding: 16px;
 	display: flex;
-	align-items: flex-start;
 	width: 100%;
+	align-items: flex-end;
 }
 .message-box:hover {
 	background-color: var(--message-box-hover);
@@ -405,11 +405,10 @@ a {
 	border-top-color: var(--link-color-hover);
 }
 .message-box img {
-	border-radius: 50%;
-	-o-object-fit: cover;
 	object-fit: cover;
 	width: 40px;
 	height: 40px;
+	margin-bottom: 10px;
 }
 
 .message-header {
@@ -429,6 +428,8 @@ a {
 .message-content {
 	padding-left: 16px;
 	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .star-checkbox input {
@@ -462,6 +463,11 @@ a {
 	margin: 8px 0;
 	color: var(--secondary-color);
 	opacity: 0.7;
+}
+p.message-line.available {
+	margin-left: auto;
+	color: #7de67d;
+	opacity: 1;
 }
 .message-line.time {
 	text-align: right;

@@ -79,13 +79,32 @@ const createWindow = (screenX, screenY) => {
 			const { displays } = graphics;
 			mainWindow.webContents.send("displays", displays);
 			mainWindow.webContents.send("gpuName", graphics.controllers[0].model);
-			mainWindow.webContents.send("memoryTotal", graphics.controllers[0].memoryTotal);
+			mainWindow.webContents.send("GPUmemoryTotal", graphics.controllers[0].memoryTotal);
 			mainWindow.webContents.send("bus", graphics.controllers[0].bus);
 			mainWindow.webContents.send("driverVersion", graphics.controllers[0].driverVersion);
 			mainWindow.webContents.send("gpuCount", graphics.controllers.length);
 		})
 		.catch((err) => {
 			console.log("graphics info error", err);
+		});
+
+	//CPU Info
+	si.cpu()
+		.then((cpu) => {
+			mainWindow.webContents.send("cpuInfo", cpu);
+		})
+		.catch((err) => {
+			console.log("cpu info error", err);
+		});
+
+	//File System Info
+	si.fsSize()
+		.then((disks) => {
+			// console.log(disks);
+			mainWindow.webContents.send("disks", disks);
+		})
+		.catch((err) => {
+			console.log("disks info error", err);
 		});
 };
 

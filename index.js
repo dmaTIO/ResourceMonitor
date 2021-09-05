@@ -33,11 +33,12 @@ ipc.on("systemTime", (event, data) => {
 ipc.on("displays", (event, data) => {
 	const displaysArray = data;
 	window.localStorage.setItem("displaysArray", JSON.stringify(displaysArray));
+	document.getElementById("displaysCount").innerHTML = data.length;
 });
 
-ipc.on("memoryTotal", (event, data) => {
-	const memoryTotal = data;
-	window.localStorage.setItem("memoryTotal", JSON.stringify(memoryTotal));
+ipc.on("GPUmemoryTotal", (event, data) => {
+	const GPUmemoryTotal = data;
+	window.localStorage.setItem("GPUmemoryTotal", JSON.stringify(GPUmemoryTotal));
 });
 
 ipc.on("gpuName", (event, data) => {
@@ -58,13 +59,36 @@ ipc.on("driverVersion", (event, data) => {
 ipc.on("gpuCount", (event, data) => {
 	const gpuCount = data;
 	window.localStorage.setItem("gpuCount", gpuCount);
+	document.getElementById("gpuCount").innerHTML = gpuCount;
+});
+
+ipc.on("cpuInfo", (event, data) => {
+	const cpuInfo = data;
+	window.localStorage.setItem("cpuInfo", JSON.stringify(cpuInfo));
+	document.getElementById("cpuCount").innerHTML = data.cores;
+	document.getElementById("cpuName").innerHTML = data?.brand;
+});
+
+ipc.on("disks", (event, data) => {
+	const disksInfo = data;
+	window.localStorage.setItem("disks", JSON.stringify(disksInfo));
+
+	const diskBoxArray = [].slice.call(document.getElementById("drivesBox").children);
+
+	diskBoxArray.forEach((el, idx) => {
+		if (data[idx]) {
+			el.getElementsByClassName("name")[0].innerHTML = data[idx]["fs"] + "/";
+			el.getElementsByClassName("message-line")[0].innerHTML = (parseFloat(data[idx]["size"]) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
+			el.getElementsByClassName("message-line")[1].innerHTML = (parseFloat(data[idx]["available"]) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
+		} else {
+			el.remove();
+		}
+	});
 });
 
 //Dashboard UI functions
 
 document.addEventListener("DOMContentLoaded", function () {
-	// Set System OS Info
-
 	//Get Name
 	const osInfoStored = JSON.parse(window.localStorage.getItem("systemInfoOS"));
 	document.getElementById("pcName").innerHTML = osInfoStored.hostname + " - " + osInfoStored.distro;
@@ -80,6 +104,24 @@ document.addEventListener("DOMContentLoaded", function () {
 	//Get GpuCount
 	const gpuCount = JSON.parse(window.localStorage.getItem("gpuCount"));
 	document.getElementById("gpuCount").innerHTML = gpuCount;
+
+	//Get CPU Cores Count
+	const cpuInfo = JSON.parse(window.localStorage.getItem("cpuInfo"));
+	document.getElementById("cpuCount").innerHTML = cpuInfo?.cores;
+	document.getElementById("cpuName").innerHTML = cpuInfo?.brand;
+
+	//Get File System
+	const fileSystem = JSON.parse(window.localStorage.getItem("disks"));
+	const diskBoxArray = [].slice.call(document.getElementById("drivesBox").children);
+	diskBoxArray.forEach((el, idx) => {
+		if (fileSystem[idx]) {
+			el.getElementsByClassName("name")[0].innerHTML = fileSystem[idx]["fs"] + "/";
+			el.getElementsByClassName("message-line")[0].innerHTML = (parseFloat(fileSystem[idx]["size"]) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
+			el.getElementsByClassName("message-line")[1].innerHTML = (parseFloat(fileSystem[idx]["available"]) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
+		} else {
+			el.remove();
+		}
+	});
 
 	//Get Dark Mode
 	let isDarkMode = window.localStorage.getItem("darkMode") === "true";
