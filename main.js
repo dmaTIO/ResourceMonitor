@@ -34,12 +34,33 @@ const createWindow = (screenX, screenY) => {
 	const resourceInterval = setInterval(() => {
 		//Send System Time
 		mainWindow.webContents.send("systemTime", si.time());
+
+		//CPU Info
+		si.currentLoad()
+			.then((currentLoad) => {
+				mainWindow.webContents.send("currentLoad", currentLoad);
+			})
+			.catch((err) => {
+				console.log("currentLoad info error", err);
+			});
+
+		//GPU Load Info
+		si.graphics()
+			.then((graphics) => {
+				// console.log(graphics);
+				const { controllers } = graphics;
+				const gpuLoad = controllers[0].utilizationGpu ? controllers[0].utilizationGpu : 0;
+				mainWindow.webContents.send("gpuLoad", gpuLoad);
+			})
+			.catch((err) => {
+				console.log("graphics info error", err);
+			});
 	}, 1000);
 
 	// and load the index.html of the app.
 	mainWindow.loadFile("index.html");
 
-	mainWindow.webContents.openDevTools();
+	// mainWindow.webContents.openDevTools();
 
 	mainWindow.on("closed", () => {
 		popWindow = null;
@@ -82,7 +103,6 @@ const createWindow = (screenX, screenY) => {
 			mainWindow.webContents.send("GPUmemoryTotal", graphics.controllers[0].memoryTotal);
 			mainWindow.webContents.send("bus", graphics.controllers[0].bus);
 			mainWindow.webContents.send("driverVersion", graphics.controllers[0].driverVersion);
-			mainWindow.webContents.send("gpuCount", graphics.controllers.length);
 		})
 		.catch((err) => {
 			console.log("graphics info error", err);

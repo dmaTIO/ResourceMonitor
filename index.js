@@ -67,14 +67,26 @@ ipc.on("cpuInfo", (event, data) => {
 	window.localStorage.setItem("cpuInfo", JSON.stringify(cpuInfo));
 	document.getElementById("cpuCount").innerHTML = data.cores;
 	document.getElementById("cpuName").innerHTML = data?.brand;
+	document.getElementById("socket").innerHTML = "Socket " + data?.socket;
+});
+
+ipc.on("currentLoad", (event, data) => {
+	const currentLoad = data;
+	// console.log(currentLoad);
+	document.getElementById("cpuPercentageValue").innerHTML = currentLoad.currentLoad.toFixed(2) + "%";
+	document.getElementById("cpuPercentageBar").style.width = currentLoad.currentLoad.toFixed(2) + "%";
+});
+
+ipc.on("gpuLoad", (event, data) => {
+	const gpuLoad = data;
+	document.getElementById("gpuPercentageValue").innerHTML = gpuLoad.toFixed(2) + "%";
+	document.getElementById("gpuPercentageBar").style.width = gpuLoad.toFixed(2) + "%";
 });
 
 ipc.on("disks", (event, data) => {
 	const disksInfo = data;
 	window.localStorage.setItem("disks", JSON.stringify(disksInfo));
-
 	const diskBoxArray = [].slice.call(document.getElementById("drivesBox").children);
-
 	diskBoxArray.forEach((el, idx) => {
 		if (data[idx]) {
 			el.getElementsByClassName("name")[0].innerHTML = data[idx]["fs"] + "/";
@@ -105,10 +117,19 @@ document.addEventListener("DOMContentLoaded", function () {
 	const gpuCount = JSON.parse(window.localStorage.getItem("gpuCount"));
 	document.getElementById("gpuCount").innerHTML = gpuCount;
 
+	//Get GpuName
+	const gpuName = JSON.parse(window.localStorage.getItem("gpuName"));
+	document.getElementById("gpuName").innerHTML = gpuName;
+
+	//Get GpuTotalMem
+	const gpuTotalMemory = JSON.parse(window.localStorage.getItem("GPUmemoryTotal"));
+	document.getElementById("gpuTotalMemory").innerHTML = "VRAM " + parseFloat(gpuTotalMemory) / 1000 + " GB";
+
 	//Get CPU Cores Count
 	const cpuInfo = JSON.parse(window.localStorage.getItem("cpuInfo"));
 	document.getElementById("cpuCount").innerHTML = cpuInfo?.cores;
 	document.getElementById("cpuName").innerHTML = cpuInfo?.brand;
+	document.getElementById("socket").innerHTML = "Socket " + cpuInfo?.socket;
 
 	//Get File System
 	const fileSystem = JSON.parse(window.localStorage.getItem("disks"));
