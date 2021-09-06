@@ -25,6 +25,10 @@ ipc.on("mem", (event, data) => {
   const memInfo = JSON.parse(data);
   document.getElementById("ramTotal").innerHTML =
     (parseFloat(memInfo.total) * (9.31 * Math.pow(10, -10))).toFixed(2) + " GB";
+  document.getElementById("ramTotalMemory").innerHTML =
+    "Total " +
+    (parseFloat(memInfo.total) * (9.31 * Math.pow(10, -10))).toFixed(2) +
+    " GB";
 });
 
 ipc.on("systemTime", (event, data) => {
@@ -90,9 +94,15 @@ ipc.on("gpuLoad", (event, data) => {
     gpuLoad.toFixed(2) + "%";
 });
 
+ipc.on("mlm", (event, data) => {
+  const mlm = data;
+  window.localStorage.setItem("MemoryLayout", mlm);
+  document.getElementById("ramName").innerHTML =
+    JSON.parse(mlm)[0].manufacturer;
+});
+
 ipc.on("disks", (event, data) => {
   const disksInfo = data;
-  console.log(data);
   window.localStorage.setItem("disks", JSON.stringify(disksInfo));
   const diskBoxArray = [].slice.call(
     document.getElementById("drivesBox").children
@@ -113,6 +123,15 @@ ipc.on("disks", (event, data) => {
       el.remove();
     }
   });
+});
+
+// memUsage
+// memTotal
+ipc.on("memUsagePercent", (event, data) => {
+  document.getElementById("ramPercentageBar").style.width =
+    data.toFixed(2) + "%";
+  document.getElementById("ramPercentageValue").innerHTML =
+    data.toFixed(1) + "%";
 });
 
 //Dashboard UI functions

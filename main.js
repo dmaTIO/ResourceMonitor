@@ -68,6 +68,13 @@ const createWindow = (screenX, screenY) => {
       .catch((err) => {
         console.log("graphics info error", err);
       });
+
+    si.mem().then((mem) => {
+      mainWindow.webContents.send(
+        "memUsagePercent",
+        (mem.used / mem.total) * 100
+      );
+    });
   }, 1000);
 
   // and load the index.html of the app.
@@ -75,7 +82,7 @@ const createWindow = (screenX, screenY) => {
   //   let menu = Menu.buildFromTemplate(menuTemplate);
   //   Menu.setApplicationMenu(menu);
 
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   mainWindow.on("closed", () => {
     popWindow = null;
@@ -106,6 +113,15 @@ const createWindow = (screenX, screenY) => {
       })
       .catch((err) => {
         console.log("mem info error", err);
+      });
+
+    //Mem Layout
+    si.memLayout()
+      .then((mlm) => {
+        mainWindow.webContents.send("mlm", JSON.stringify(mlm));
+      })
+      .catch((err) => {
+        console.log("Mem Layout error", err);
       });
 
     //Graphics Info
