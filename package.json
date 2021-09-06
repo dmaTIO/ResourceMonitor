@@ -1,47 +1,50 @@
 {
-	"name": "fuxmonitor",
-	"productName": "FuxMonitor",
-	"version": "1.0.0",
-	"description": "Resource Monitor",
-	"main": "main.js",
-	"icon": "assets/icons/MBAM.icon",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "electron .",
-		"build-installer": "electron-builder --windows"
-	},
-	"keywords": [
-		"electron"
-	],
-	"author": "",
-	"license": "ISC",
-	"devDependencies": {
-		"electron": "^14.0.0",
-		"electron-builder": "^22.11.7"
-	},
-	"dependencies": {
-		"cmake-js": "^6.2.1",
-		"node-addon-api": "^4.1.0",
-		"os-utils": "^0.0.14",
-		"osx-temperature-sensor": "^1.0.7",
-		"systeminformation": "^5.8.7"
-	},
-	"build": {
-		"appId": "FuxMonitor",
-		"win": {
-			"target": [
-				"nsis"
-			],
-			"icon": "assets/Icons/MBAM.ico",
-			"requestedExecutionLevel": "requireAdministrator"
-		},
-		"nsis": {
-			"installerIcon": "assets/Icons/MBAM.ico",
-			"uninstallerIcon": "assets/Icons/MBAM.ico",
-			"uninstallDisplayName": "FuxMonitor",
-			"license": "",
-			"oneClick": false,
-			"allowToChangeInstallationDirectory": true
-		}
-	}
+  "name": "fuxmonitor",
+  "productName": "FuxMonitor",
+  "version": "1.0.0",
+  "description": "Resource Monitor",
+  "main": "main.js",
+  "icon": "assets/icons/MBAM.icon",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build-installer": "electron-builder -mlw"
+  },
+  "keywords": [
+    "electron"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^14.0.0",
+    "electron-builder": "^22.11.7"
+  },
+  "dependencies": {
+    "cmake-js": "^6.2.1",
+    "node-addon-api": "^4.1.0",
+    "os-utils": "^0.0.14",
+    "osx-temperature-sensor": "^1.0.7",
+    "systeminformation": "^5.8.7"
+  },
+  "build": {
+    "appId": "FuxMonitor",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/Icons/MBAM.ico",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "mac": {
+      "icon": "assets/Radial.png"
+    },
+    "nsis": {
+      "installerIcon": "assets/Icons/MBAM.ico",
+      "uninstallerIcon": "assets/Icons/MBAM.ico",
+      "uninstallDisplayName": "FuxMonitor",
+      "license": "",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
 }

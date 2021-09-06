@@ -82,7 +82,7 @@ const createWindow = (screenX, screenY) => {
   //   let menu = Menu.buildFromTemplate(menuTemplate);
   //   Menu.setApplicationMenu(menu);
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.on("closed", () => {
     popWindow = null;
